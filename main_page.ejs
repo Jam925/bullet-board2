@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>메인 페이지</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>로그인ID: <%= user_id %></h1>
+        <button class="btn btn-danger" onclick="location.href='/logout'">로그아웃</button>
+    </div>
+    <% if (message) { %>
+        <div class="alert alert-info"><%= message %></div>
+    <% } %>
+    <h2>게시글 목록</h2>
+    <ul class="list-group mb-4">
+        <% posts.forEach(function(post) { %>
+            <li class="list-group-item">
+                <span class="badge badge-primary"><%= post.post_id %></span>
+                <a href="/post/<%= post.post_id %>"><%= post.title %></a>
+                <div class="text-muted small">
+                    작성자: <%= post.author_id %> | 작성일: <%= post.creation_date %> | 좋아요: <%= post.likes %>
+                </div>
+            </li>
+        <% }); %>
+    </ul>
+    <nav>
+        <ul class="pagination">
+            <% for(let i = 1; i <= totalPages; i++) { %>
+                <li class="page-item <%= i === page ? 'active' : '' %>">
+                    <a class="page-link" href="/main?page=<%= i %>"><%= i %></a>
+                </li>
+            <% } %>
+        </ul>
+    </nav>
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">새 게시글 작성</h2>
+            <form action="/post" method="post">
+                <div class="form-group">
+                    <label for="title">제목:</label>
+                    <input type="text" name="title" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="content">내용:</label>
+                    <textarea name="content" class="form-control" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">작성</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>게시글 상세 페이지</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h1><%= post.title %></h1>
+    <div class="text-muted mb-4">
+        게시글 번호: <span class="badge badge-primary"><%= post.post_id %></span>
+    </div>
+    <div class="text-muted mb-4">
+        작성자: <%= post.author_id %> | 작성일: <%= post.creation_date %> | 좋아요: <%= post.likes %>
+    </div>
+    <p><%= post.content %></p>
+<form action="/likePost" method="post">
+    <input type="hidden" name="post_id" value="<%= post.post_id %>">
+    <button type="submit">
+        <% if (post.userLiked) { %>
+            좋아요 취소
+        <% } else { %>
+            좋아요
+        <% } %>
+    </button>
+</form>
+
+    <% if (post.author_id === user_id) { %>
+        <form action="/deletePost" method="post" class="mt-2">
+            <input type="hidden" name="post_id" value="<%= post.post_id %>">
+            <button type="submit" class="btn btn-danger">게시글 삭제</button>
+        </form>
+    <% } %>
+    <h2 class="mt-4">댓글</h2>
+    <ul class="list-group mb-4">
+        <% comments.forEach(function(comment) { %>
+            <li class="list-group-item">
+                <p><%= comment.content %> - <span class="text-muted">작성자: <%= comment.author_id %> | 작성일: <%= comment.creation_date %></span></p>
+                <% if (comment.author_id === user_id) { %>
+                    <form action="/deleteComment" method="post" class="mt-2">
+                        <input type="hidden" name="comment_id" value="<%= comment.comment_id %>">
+                        <input type="hidden" name="post_id" value="<%= post.post_id %>">
+                        <button type="submit" class="btn btn-danger btn-sm">댓글 삭제</button>
+                    </form>
+                <% } %>
+            </li>
+        <% }); %>
+    </ul>
+    <div class="card">
+        <div class="card-body">
+            <form action="/comment" method="post">
+                <input type="hidden" name="post_id" value="<%= post.post_id %>">
+                <div class="form-group">
+                    <label for="content">댓글 작성:</label>
+                    <textarea name="content" class="form-control" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">댓글 작성</button>
+            </form>
+        </div>
+    </div>
+    <button class="btn btn-danger mt-4" onclick="location.href='/logout'">로그아웃</button>
+</body>
+</html>
